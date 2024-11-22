@@ -1,4 +1,7 @@
 ---
+import Header from '../components/Header.svelte';
+
+
 interface Props {
 	title: string;
 }
@@ -16,35 +19,34 @@ const { title } = Astro.props;
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 	</head>
-	<body>
+	<body class="no-animation init">
+		<Header client:load />
 		<slot />
 	</body>
 </html>
 <style is:global>
-	:root {
-		--accent: 136, 58, 234;
-		--accent-light: 224, 204, 250;
-		--accent-dark: 49, 10, 101;
-		--accent-gradient: linear-gradient(
-			45deg,
-			rgb(var(--accent)),
-			rgb(var(--accent-light)) 30%,
-			white 60%
-		);
+	@font-face {
+		font-family: "Felix";
+		src: url("/assets/fonts/Fellix-Regular.woff2") format("woff2");
 	}
-	html {
-		font-family: system-ui, sans-serif;
-		background: #13151a;
+
+	/* Disable transitions during initial load */
+	.no-animation, .no-animation * {
+		transition: none !important;
 	}
-	code {
-		font-family:
-			Menlo,
-			Monaco,
-			Lucida Console,
-			Liberation Mono,
-			DejaVu Sans Mono,
-			Bitstream Vera Sans Mono,
-			Courier New,
-			monospace;
+
+	/* Hover Animations */
+	.hover-lift {
+		transition: transform 0.3s ease;
+	}
+	.hover-lift:hover {
+		transform: translateY(-2px);
+	}
+
+	.hover-glow {
+		transition: text-shadow 0.3s ease;
+	}
+	.hover-glow:hover {
+		text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
 	}
 </style>
