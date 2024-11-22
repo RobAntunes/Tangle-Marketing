@@ -1,6 +1,7 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
-    import { inView } from '../lib/actions/inView';
+    import { onMount } from "svelte";
+    import { inView } from "../lib/actions/inView";
+    import { fade } from "svelte/transition";
 
     const links = [
         { title: "Home", href: "/" },
@@ -13,9 +14,9 @@
     const toggleMenu = () => {
         isMenuOpen = !isMenuOpen;
         if (isMenuOpen) {
-            document.body.style.overflow = 'hidden';
+            document.body.style.overflow = "hidden";
         } else {
-            document.body.style.overflow = 'auto';
+            document.body.style.overflow = "auto";
         }
     };
 
@@ -35,11 +36,14 @@
         <div class="slide-right header-item" class:visible={isVisible}>
             <h1 class="text-3xl font-bold hover-lift">Tangle</h1>
         </div>
-        
+
         <!-- Desktop Navigation -->
-        <nav class="hidden lg:flex gap-x-8 items-center slide-left header-item" class:visible={isVisible}>
+        <nav
+            class="hidden lg:flex gap-x-8 items-center slide-left header-item"
+            class:visible={isVisible}
+        >
             {#each links as link, i}
-                <a 
+                <a
                     href={link.href}
                     class="hover:text-lime-400 transition-colors duration-200 hover-lift header-item"
                     class:visible={isVisible}
@@ -85,16 +89,19 @@
 
     <!-- Mobile Navigation Overlay -->
     {#if isMenuOpen}
-        <div 
+        <button
+            aria-label="Close menu"
             class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
             on:click={toggleMenu}
             transition:fade={{ duration: 200 }}
-        ></div>
+        ></button>
     {/if}
 
     <!-- Mobile Navigation Side Panel -->
     <nav
-        class="fixed top-0 right-0 h-full w-64 bg-slate-900/95 backdrop-blur-sm transform transition-all duration-300 ease-in-out z-40 lg:hidden {isMenuOpen ? 'translate-x-0' : 'translate-x-full'}"
+        class="fixed top-0 right-0 h-full w-64 bg-slate-900/95 backdrop-blur-sm transform transition-all duration-300 ease-in-out z-40 lg:hidden {isMenuOpen
+            ? 'translate-x-0'
+            : 'translate-x-full'}"
     >
         <div class="flex flex-col pt-24 px-4">
             {#each links as link, i}
@@ -103,8 +110,8 @@
                     class="py-4 text-white text-lg hover:text-lime-400 border-b border-slate-800 transition-all duration-200 hover-lift slide-left"
                     use:inView
                     style="animation-delay: {200 + i * 100}ms"
-                    on:click={toggleMenu}
-                >{link.title}</a>
+                    on:click={toggleMenu}>{link.title}</a
+                >
             {/each}
         </div>
     </nav>
@@ -129,19 +136,20 @@
         opacity: 0;
         transform: translateY(-10px);
     }
-    
+
     .header-item.visible {
         opacity: 1;
         transform: translateY(0);
-        transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
-                    transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        transition:
+            opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+            transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     /* Mobile menu styles */
     .menu-enter {
         transform: translateX(100%);
     }
-    
+
     .menu-enter.visible {
         transform: translateX(0);
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
