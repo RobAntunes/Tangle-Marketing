@@ -11,22 +11,28 @@ export const prerender = false;
 
 <script>
 	import { actions } from "astro:actions";
-	let res: { success: boolean; error: string } | null = null;
 	const handleSubmit = async (email: string) => {
 		const { data, error } = await actions.addToWaitlist(email);
 		if (data?.success) {
-			res = { success: true, error: "" };
 			document.getElementById("waitlist-form")!.innerHTML =
 				`<div class="flex flex-col items-center">
 				<p class="text-2xl text-lime-400 text-center mb-6">
 					Thanks for joining the waitlist!
 				</p>
 			</div>`;
-		} else {
+		} else if (error) {
+			console.error(error);
 			document.getElementById("waitlist-form")!.innerHTML =
 				`<div class="flex flex-col items-center">
 					<p class="text-2xl text-red-500 text-center mb-6">
 						You're already on the waitlist!
+					</p>
+				</div>`;
+		} else {
+			document.getElementById("waitlist-form")!.innerHTML =
+				`<div class="flex flex-col items-center">
+					<p class="text-2xl text-red-500 text-center mb-6">
+						"Internal Server Error, please try again"
 					</p>
 				</div>`;
 		}
