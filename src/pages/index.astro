@@ -4,47 +4,49 @@ import Features from "../components/Features.svelte";
 import TangleIntro from "../components/TangleIntro.svelte";
 import Security from "../components/Security.svelte";
 import BeyondBlockchain from "../components/BeyondBlockchain.svelte";
+import WaitlistForm from "../components/WaitlistForm.svelte";
 import Layout from "../layouts/Layout.astro";
 
 export const prerender = false;
+
+const already = Astro.cookies.get("waitlist")?.value;
 ---
 
 <script>
 	import { actions } from "astro:actions";
-	const handleSubmit = async (email: string) => {
+
+	let email = "";
+
+	const handleChange = function (event: any) {
+		email = event.target.value;
+	};
+
+	const handleSubmit = async function (event: Event, email: string) {
+		event.preventDefault();
 		const { data, error } = await actions.addToWaitlist(email);
-		if (data?.success) {
-			document.getElementById("waitlist-form")!.innerHTML =
-				`<div class="flex flex-col items-center">
-				<p class="text-2xl text-lime-400 text-center mb-6">
-					Thanks for joining the waitlist!
-				</p>
-			</div>`;
-		} else if (error) {
-			console.error(error);
-			document.getElementById("waitlist-form")!.innerHTML =
-				`<div class="flex flex-col items-center">
-					<p class="text-2xl text-red-500 text-center mb-6">
-						You're already on the waitlist!
-					</p>
-				</div>`;
+		if (error) {
+			document.querySelector("#waitlist")!.innerHTML =
+				`<p class="text-red-500 text-center">${error}</p>`;
+			return {
+				success: null,
+				error: error,
+			};
 		} else {
-			document.getElementById("waitlist-form")!.innerHTML =
-				`<div class="flex flex-col items-center">
-					<p class="text-2xl text-red-500 text-center mb-6">
-						"Internal Server Error, please try again"
-					</p>
-				</div>`;
+			if (data?.success || document.cookie.includes("waitlist=true")) {
+				document.querySelector("#waitlist")!.innerHTML =
+					`<p class="text-lime-400 text-center">You're already on the waitlist! We'll email you when we launch.</p>`;
+			}
+			return {
+				success: data,
+				error: null,
+			};
 		}
 	};
-	document
-		.getElementById("button")
-		?.addEventListener("click", (e) =>
-			handleSubmit(
-				(document.getElementById("waitlist-form") as HTMLFormElement)
-					.email.value,
-			),
-		);
+
+	const form = document.querySelector("#waitlist-form");
+	form?.addEventListener("submit", async (e) => await handleSubmit(e, email));
+
+	document.querySelector("#email")?.addEventListener("change", handleChange);
 </script>
 
 <Layout title="Tangle | The Architecture of Tomorrow">
@@ -96,24 +98,35 @@ export const prerender = false;
 						Be among the first to experience the future of
 						blockchain technology.
 					</p>
-					<form id="waitlist-form" class="max-w-md mx-auto">
-						<div class="flex flex-col sm:flex-row gap-4">
-							<input
-								type="email"
-								name="email"
-								placeholder="Enter your email"
-								class="flex-1 px-6 py-3 bg-black/50 rounded-xl border border-lime-400/20 text-white placeholder-gray-400 focus:outline-none focus:border-lime-400/40"
-								required
-							/>
-							<button
-								id="button"
-								type="button"
-								class="px-8 py-3 bg-gradient-to-r from-lime-400 to-green-500 text-black font-bold rounded-xl hover:opacity-90 transition-opacity"
-							>
-								Join Waitlist
-							</button>
-						</div>
-					</form>
+					<div id="waitlist">
+						{
+							!already && (
+								<form
+									id="waitlist-form"
+									class="max-w-md mx-auto"
+									method="post"
+								>
+									<div class="flex flex-col sm:flex-row gap-4">
+										<input
+											id="email"
+											type="email"
+											name="email"
+											placeholder="Enter your email"
+											class="flex-1 px-6 py-3 bg-black/50 rounded-xl border border-lime-400/20 text-white placeholder-gray-400 focus:outline-none focus:border-lime-400/40"
+											required
+										/>
+										<button
+											id="submit"
+											type="submit"
+											class="px-8 py-3 bg-gradient-to-r from-lime-400 to-green-500 text-black font-bold rounded-xl hover:opacity-90 transition-opacity"
+										>
+											Join Waitlist
+										</button>
+									</div>
+								</form>
+							)
+						}
+					</div>
 				</div>
 			</div>
 		</section>

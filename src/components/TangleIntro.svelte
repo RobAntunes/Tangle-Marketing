@@ -23,8 +23,8 @@
                 Tangle
             </h2>
             <p class="text-lg sm:text-xl md:text-2xl lg:text-3xl text-lime-400">
-                Powering The Future at the speed of physics.<br class="hidden sm:block" />
-                Unleashing the Potential of Decentralized Systems.
+                Powering the future at the speed of physics.<br class="hidden sm:block" />
+                Unleashing the potential of decentralized systems.
             </p>
         </div>
 

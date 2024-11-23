@@ -20,7 +20,7 @@
         },
         {
             title: "Separation of Powers",
-            description: "While transactions flow at physical speed, consensus emerges gradually like sediment settling in still water. This natural separation removes artificial bottlenecks, letting each part of the system move at its own perfect pace.",
+            description: "While transactions flow at physical speed, consensus emerges gradually like sediment settling in still water. This natural separation removes artificial bottlenecks, letting each part of the system move freely.",
             icon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3v3m0 12v3M3 12h3m12 0h3m-3.5-6.5-2 2m-7 7-2 2m11 0-2-2m-7-7-2-2"></path></svg>`
         },
         {
