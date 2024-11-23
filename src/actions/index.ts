@@ -5,14 +5,12 @@ import { Email } from '../../db/config';
 
 export const server = {
   addToWaitlist: defineAction({
-    input: z.object({
-      email: z.string().email(),
-    }),
-    handler: async (input) => {
+    input: z.string().email(),
+    handler: async (input: string) => {
       try {
         const result = await db
           .insert(Email)
-          .values(input.email)
+          .values(input)
           .returning();
 
         return {
