@@ -12,7 +12,7 @@ export const prerender = false;
 <script>
 	import { actions } from "astro:actions";
 	const handleSubmit = async (email: string) => {
-		const { data, error } = await actions.addToWaitlist({ email });
+		const { data, error } = await actions.addToWaitlist(email);
 
 		if (data?.success) {
 			document.getElementById("waitlist-form")!.innerHTML = `
