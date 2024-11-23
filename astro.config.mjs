@@ -5,7 +5,13 @@ import svelte from '@astrojs/svelte';
 import react from '@astrojs/react';
 import tailwind from '@astrojs/tailwind';
 
+import db from '@astrojs/db';
+
+import vercel from '@astrojs/vercel/serverless';
+
 // https://astro.build/config
 export default defineConfig({
-  integrations: [svelte(), react(), tailwind()]
+  output: "hybrid",
+  integrations: [svelte(), react(), tailwind(), db()],
+  adapter: vercel()
 });

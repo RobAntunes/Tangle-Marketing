@@ -292,8 +292,6 @@
 import WaitlistForm from './WaitlistForm.svelte';
 </script>
 
-<WaitlistForm />
-
 <style>
     .reveal-section {
         opacity: 0;
