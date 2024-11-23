@@ -5,51 +5,33 @@ import TangleIntro from "../components/TangleIntro.svelte";
 import Security from "../components/Security.svelte";
 import BeyondBlockchain from "../components/BeyondBlockchain.svelte";
 import Layout from "../layouts/Layout.astro";
-import { server } from "../actions/index";
 
 export const prerender = false;
-
-export async function POST({ request }: { request: Request }) {
-	const formData = await request.formData();
-	const email = formData.get("email");
-
-	if (!email) {
-		return new Response(JSON.stringify({ error: "Email is required" }), {
-			status: 400,
-			headers: { "Content-Type": "application/json" },
-		});
-	}
-
-	try {
-		const result = await server.addToWaitlist({ email: email.toString() });
-		const response = new Response(JSON.stringify({ success: true }), {
-			status: 200,
-			headers: { "Content-Type": "application/json" },
-		});
-
-		// Add the cookie from the action result
-		if (result.data?.cookies) {
-			result.data.cookies.forEach((cookie) => {
-				response.headers.append(
-					"Set-Cookie",
-					`${cookie.name}=${cookie.value}; Path=${cookie.path}; Max-Age=${cookie.maxAge}; ${cookie.secure ? "Secure;" : ""} ${cookie.httpOnly ? "HttpOnly;" : ""} SameSite=${cookie.sameSite}`,
-				);
-			});
-		}
-
-		return response;
-	} catch (error) {
-		console.error("Error inserting email into waitlist:", error);
-		return new Response(
-			JSON.stringify({ error: "Internal server error" }),
-			{
-				status: 500,
-				headers: { "Content-Type": "application/json" },
-			},
-		);
-	}
-}
 ---
+
+<script>
+	import { actions } from "astro:actions";
+	const handleSubmit = async (email: string) => {
+		const { data, error } = await actions.addToWaitlist({ email });
+
+		if (data?.success) {
+			document.getElementById("waitlist-form")!.innerHTML = `
+			<div class="text-center text-lime-400 text-xl">
+				Thank you for joining! We'll be in touch soon.
+			</div>
+			`;
+		} else {
+			document.getElementById("waitlist-form")!.innerHTML = `
+			<div class="text-center text-red-400 text-xl">
+				${error?.message}
+			</div>
+			`;
+		}
+	};
+	document
+		.getElementById("button")
+		?.addEventListener("click", handleSubmit as any);
+</script>
 
 <Layout title="Tangle | The Architecture of Tomorrow">
 	<main class="font-felix h-full">
@@ -102,36 +84,25 @@ export async function POST({ request }: { request: Request }) {
 					</p>
 
 					<!-- Form -->
-					{
-						Astro.cookies.get("submitted")?.value ? (
-							<div class="text-center text-lime-400 text-xl">
-								Thank you for joining! We'll be in touch soon.
-							</div>
-						) : (
-							<form method="POST" class="max-w-md mx-auto">
-								<div class="flex flex-col sm:flex-row gap-4">
-									<input
-										type="email"
-										name="email"
-										placeholder="Enter your email"
-										class="flex-1 px-6 py-3 bg-black/50 rounded-xl border border-lime-400/20 text-white placeholder-gray-400 focus:outline-none focus:border-lime-400/40"
-										required
-									/>
-									<button
-										type="submit"
-										class="px-8 py-3 bg-gradient-to-r from-lime-400 to-green-500 text-black font-bold rounded-xl hover:opacity-90 transition-opacity"
-									>
-										Join Waitlist
-									</button>
-								</div>
-								{Astro.cookies.get("error")?.value && (
-									<p class="text-red-400 mt-2 text-center">
-										{Astro.cookies.get("error")?.value}
-									</p>
-								)}
-							</form>
-						)
-					}
+
+					<form id="waitlist-form" class="max-w-md mx-auto">
+						<div class="flex flex-col sm:flex-row gap-4">
+							<input
+								type="email"
+								name="email"
+								placeholder="Enter your email"
+								class="flex-1 px-6 py-3 bg-black/50 rounded-xl border border-lime-400/20 text-white placeholder-gray-400 focus:outline-none focus:border-lime-400/40"
+								required
+							/>
+							<button
+								id="button"
+								type="button"
+								class="px-8 py-3 bg-gradient-to-r from-lime-400 to-green-500 text-black font-bold rounded-xl hover:opacity-90 transition-opacity"
+							>
+								Join Waitlist
+							</button>
+						</div>
+					</form>
 				</div>
 			</div>
 		</section>
