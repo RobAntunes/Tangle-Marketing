@@ -4,7 +4,6 @@ import { column, defineDb, defineTable } from 'astro:db';
 export const Email = defineTable({
   columns: {
     email: column.text({unique: true}),
-    createdAt: column.text(),
   },
 });
 

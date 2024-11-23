@@ -12,10 +12,7 @@ export const server = {
       try {
         const result = await db
           .insert(Email)
-          .values({
-            email: input.email,
-            createdAt: new Date().toISOString(),
-          })
+          .values(input.email)
           .returning();
 
         return {
