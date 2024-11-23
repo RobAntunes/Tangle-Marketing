@@ -4,7 +4,9 @@
 >
     <!-- Animated Grid Background -->
     <div class="absolute inset-0 opacity-5">
-        <div class="absolute inset-0 grid grid-cols-6 sm:grid-cols-8 md:grid-cols-12 gap-1">
+        <div
+            class="absolute inset-0 grid grid-cols-6 sm:grid-cols-8 md:grid-cols-12 gap-1"
+        >
             {#each Array(48) as _, i}
                 <div
                     class="h-full border-r border-lime-400/10 animate-pulse"
@@ -26,7 +28,9 @@
 
         <!-- Main Description -->
         <div class="max-w-3xl mx-auto text-left mb-12 md:mb-16 px-0 sm:px-6">
-            <p class="text-lg sm:text-xl text-gray-300 leading-relaxed mb-6 sm:mb-8">
+            <p
+                class="text-lg sm:text-xl text-gray-300 leading-relaxed mb-6 sm:mb-8"
+            >
                 Most blockchains are digital ledgers obsessed with global order
                 and perfect synchronization. Tangle isn't.
             </p>
@@ -39,7 +43,9 @@
         </div>
 
         <!-- Features Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-12 md:mb-16">
+        <div
+            class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-12 md:mb-16"
+        >
             <div
                 class="relative bg-black/30 p-8 rounded-xl border border-lime-400/20 hover:border-lime-400/40 transition-all duration-500 group"
             >
@@ -287,10 +293,6 @@
         </div>
     </div>
 </section>
-
-<script>
-import WaitlistForm from './WaitlistForm.svelte';
-</script>
 
 <style>
     .reveal-section {
