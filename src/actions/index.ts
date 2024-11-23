@@ -8,7 +8,7 @@ export const server = {
     input: z.string().email(),
     handler: async (input: string) => {
       try {
-        const result = await db
+        await db
           .insert(Email)
           .values(input)
           .returning();
